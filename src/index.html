@@ -19,23 +19,44 @@
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-
+        <div class="pagetitle">Raining Cats and Dogs</div>
         <div class="filtercontainer blackborder">
             <span class="filteroption">
-                <img class="filterimage" src="img/cat19.svg">
+                <img class="filterimage" src="img/cat19.svg" onclick="SwrveApp.navigationHandler.prototype.onFilterClick('cat')">
             </span>
             <span class="filteroption">
-                <img class="filterimage" src="img/dog56.svg">
+                <img class="filterimage" src="img/dog56.svg" onclick="SwrveApp.navigationHandler.prototype.onFilterClick('dog')">
             </span>
         </div>
         <div id="resultsContainer" class="resultscontainer blackborder">
             <div id ="result1" class="indivdualresult">
-                <img class="gifImage" src="">
+                <img class="gifImage" src="img/spinner.gif" onclick="SwrveApp.additionalDetailsHandler.prototype.onGifClick(this)">
+                <div class="gifData">
+                    <table class="gifDataTable">
+                        <tr>
+                            <th class="gifDataTableHeader">Attribute</th>
+                            <th class="gifDataTableHeader">Value</th>
+                        </tr>
+                        <tr>
+                            <td class="gifDataTableData">Rating</td>
+                            <td class="gifDataTableData gifRating"></td>
+                        </tr>
+                        <tr>
+                            <td class="gifDataTableData">Source</td>
+                            <td class="gifDataTableData"><a class="gifSource" href="">Link</a></td>
+                        </tr>
+                        <tr>
+                            <td class="gifDataTableData">Image URL</td>
+                            <td class="gifDataTableData"><a class="gifURL" href="">Link</a></td>
+                        </tr>
+                    </table>
+
+                </div>
             </div>
         </div>
         <div class="pagingArrows">
-            <i class="fa fa-arrow-left pagearrow"></i>
-            <i class="fa fa-arrow-right pagearrow"></i>
+            <i id="leftarrow" class="fa fa-arrow-left pagearrow" onclick="SwrveApp.navigationHandler.prototype.onPageArrowClick('left')"></i>
+            <i id="rightarrow" class="fa fa-arrow-right pagearrow" onclick="SwrveApp.navigationHandler.prototype.onPageArrowClick('right')"></i>
         </div>
         <!--<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>             is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a></div>-->
 
