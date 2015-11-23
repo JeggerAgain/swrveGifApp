@@ -12,6 +12,12 @@ The app uses a revealing module pattern which only exposes certain functions and
 
 Due to the simple nature of the app I have chosen to not use any JS framework. 
 
+
+To Do: 
+Jasmine Unit Tests
+Media Queries to fix margins on mobile
+Change cursor to pointer on Filter and Arrows to indicate clickable
+
 Icons by https://fortawesome.github.io/Font-Awesome/icons/
 
 Cat and Dog SVG by:
