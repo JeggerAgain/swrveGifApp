@@ -3,6 +3,7 @@ html {
 }
 .pagetitle{
     margin: 10% 43% 0px 43%;
+    min-width: 185px;
 }
 
 .filtercontainer {
@@ -17,11 +18,13 @@ html {
     width: 40%;
     height: 80%;
     margin: 5px 4% 5px 4%;
+    cursor:pointer;
 }
 .resultscontainer {
     width: 60%;
     height: 75%;
     margin: 1% 20% 0% 20%;
+    min-width: 220px;
 }
 .indivdualresult {
     width: 90%;
@@ -32,7 +35,7 @@ html {
     border: 1px solid black;
     border-radius: 5px;
 }
-.gifImage {
+.gifimage {
     width: 200px;
     height: 200px;
     margin-left: 38%;
@@ -42,7 +45,7 @@ html {
     width: 100%;
     height: 100%;
 }
-.pagingArrows {
+.pagingarrows {
     width: 120px;
     height: 75%;
     margin: 1% 40% 5% 47%;
@@ -58,29 +61,44 @@ html {
 #leftarrow {
     color: grey;
 }
-.gifData {
+.gifdata {
     visibility: hidden;
     height: 0px;
     width: 200px;
     margin-left: 38%;
 }
-.gifDataTable {
+.gifdatatable {
     width: 100%;
     border-spacing: 0px;
     height: 100%;
     table-layout: fixed;
 }
-.gifDataTableHeader {
+.gifdatatableheader {
     border: 1px solid black;
     width: 50%;
     height: 25%;
     font-weight: normal;
 }
-.gifDataTableData {
+.gifdatatabledata {
     border: 1px solid black;
     height: 25%;
     width: 50px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+@media screen and (max-width: 375px) {
+    .gifimage {
+        margin-left: -2px;
+    }
+    .gifdata {
+        margin-left: -2px;
+    }
+    .pagetitle {
+        margin-left: 26%;
+    }
+    .pagingarrows {
+        margin-left: 32%;
+    }
 }

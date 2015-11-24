@@ -4,10 +4,12 @@
  */
 var SwrveApp = function () {
     "use strict";
-    var gifTotalLimit = 500,
-        gifLimitPerPage = 25,
-        currentPage = 0,
-        currentFilterTotalResults,
+    var variables = {
+            gifTotalLimit: 500,
+            gifLimitPerPage: 25,
+            currentPage: 0,
+            currentFilterTotalResults : {}
+        },
 
         /*
          *apiDataHandler is used to request and process data from an API
@@ -24,7 +26,7 @@ var SwrveApp = function () {
             var httpGetAsync = function (apiUrl, gifTerm, callback, renderResponseCallback) {
                 if (typeof apiUrl === 'string') {
                     var xmlHttp = new XMLHttpRequest();
-                    apiUrl = apiUrl.slice(0, apiUrl.indexOf('q=') + 2) + gifTerm + apiUrl.slice(apiUrl.indexOf('q=') + 2) + gifTotalLimit;
+                    apiUrl = apiUrl.slice(0, apiUrl.indexOf('q=') + 2) + gifTerm + apiUrl.slice(apiUrl.indexOf('q=') + 2) + variables.gifTotalLimit;
                     xmlHttp.onreadystatechange = function () {
                         if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
                             callback(xmlHttp.responseText, renderResponseCallback);
@@ -51,7 +53,7 @@ var SwrveApp = function () {
                             return;
                         }
                     }
-                    currentFilterTotalResults = response;
+                    variables.currentFilterTotalResults = response;
                     if(renderResponseCallback) {
                         renderResponseCallback(response);
                     }
@@ -82,18 +84,20 @@ var SwrveApp = function () {
          * @param {number} max the index to end when updating results
          */
         var updateResults = function(response, min, max) {
-            var len, i, newResult, indivdualResult, image,
+            var len, i, indivdualResult, image,
                 j = 0;
             if (response) {
-                len = max ? max : gifLimitPerPage;
+                len = max ? max : variables.gifLimitPerPage;
                 i = min ? min : 0;
                 for (; i < len; i++) {
                     indivdualResult = document.getElementById("result" + (j + 1));
-                    image = indivdualResult.firstElementChild;
-                    image.removeAttribute('src');
-                    image.setAttribute('src', response.data[i].images.fixed_height.url);
-                    image.setAttribute('index', i);
-                    updateGifAdditionalData(image, response.data[i]);
+                    if(indivdualResult) {
+                        image = indivdualResult.firstElementChild;
+                        image.removeAttribute('src');
+                        image.setAttribute('src', response.data[i].images.fixed_height.url);
+                        image.setAttribute('index', i);
+                        updateGifAdditionalData(image, response.data[i]);
+                    }
                     j++;
                 }
             }
@@ -105,30 +109,38 @@ var SwrveApp = function () {
          * @param {object} data contains all the information for one result
          */
         var updateGifAdditionalData = function(imageElement, data) {
-            imageElement.parentNode.getElementsByClassName('gifRating')[0].innerHTML = data.rating;
-            imageElement.parentNode.getElementsByClassName('gifSource')[0].setAttribute('href', data.source);
-            imageElement.parentNode.getElementsByClassName('gifURL')[0].setAttribute('href', data.url);
+            imageElement.parentNode.getElementsByClassName('gifrating')[0].innerHTML = data.rating;
+            imageElement.parentNode.getElementsByClassName('gifsource')[0].setAttribute('href', data.source);
+            imageElement.parentNode.getElementsByClassName('gifurl')[0].setAttribute('href', data.url);
         };
 
         /*
          * checkIfLastPage checks if the current user position is the last page in
          * either direction and if so updates arrow color to black or grey
          */
-        var checkIfLastPage = function() {
+        navigationHandler.prototype.checkIfLastPage = function() {
             var arrow;
-            if(currentPage === 0) {
+            if(variables.currentPage === 0) {
                 arrow = document.getElementById("leftarrow");
-                arrow.setAttribute('style','color: grey');
+                if(arrow) {
+                    arrow.setAttribute('style', 'color: grey');
+                }
             } else {
                 arrow = document.getElementById("leftarrow");
-                arrow.setAttribute('style','color: black');
+                if(arrow) {
+                    arrow.setAttribute('style', 'color: black');
+                }
             }
-            if(currentPage === gifTotalLimit) {
+            if(variables.currentPage === variables.gifTotalLimit) {
                 arrow = document.getElementById("rightarrow");
-                arrow.setAttribute('style','color: grey');
+                if(arrow) {
+                    arrow.setAttribute('style', 'color: grey');
+                }
             } else {
                 arrow = document.getElementById("rightarrow");
-                arrow.setAttribute('style','color: black');
+                if(arrow) {
+                    arrow.setAttribute('style', 'color: black');
+                }
             }
         };
 
@@ -141,19 +153,23 @@ var SwrveApp = function () {
             var len, i, newResult, indivdualResult, image;
             if(response) {
                 len = response.data.length;
-                for (i = 0; i < len && i < gifLimitPerPage; i++) {
+                for (i = 0; i < len && i < variables.gifLimitPerPage; i++) {
                     indivdualResult = document.getElementById("result1");
-                    if(i===0) {
-                        newResult = indivdualResult
-                    } else {
-                        newResult = indivdualResult.cloneNode(true);
-                        newResult.setAttribute('id', 'result' + (i + 1));
+                    if(indivdualResult) {
+                        if (i === 0) {
+                            newResult = indivdualResult
+                        } else {
+                            newResult = indivdualResult.cloneNode(true);
+                            newResult.setAttribute('id', 'result' + (i + 1));
+                        }
+                        if (newResult) {
+                            image = newResult.firstElementChild;
+                            image.setAttribute('src', response.data[i].images.fixed_height.url);
+                            image.setAttribute('index', i);
+                            document.getElementById("resultscontainer").appendChild(newResult);
+                            updateGifAdditionalData(image, response.data[i]);
+                        }
                     }
-                    image = newResult.firstElementChild;
-                    image.setAttribute('src', response.data[i].images.fixed_height.url);
-                    image.setAttribute('index', i);
-                    document.getElementById("resultsContainer").appendChild(newResult);
-                    updateGifAdditionalData(image, response.data[i]);
                 }
             }
         };
@@ -164,10 +180,10 @@ var SwrveApp = function () {
          */
         navigationHandler.prototype.onFilterClick = function(type) {
             var firstResult = document.getElementById("result1");
-            firstResult.setAttribute('src','img/spinner.gif');
-            currentPage = 0;
+            firstResult.firstElementChild.setAttribute('src','img/spinner.gif');
+            variables.currentPage = 0;
             apiDataHandler.prototype.generateApiResponse(apiUrl, type, updateResults);
-            checkIfLastPage();
+            navigationHandler.prototype.checkIfLastPage();
         };
 
         /*
@@ -178,18 +194,18 @@ var SwrveApp = function () {
             var startIndex, endIndex;
             window.scrollTo(0, 0);
             if(direction === 'right') {
-                currentPage = currentPage + 1;
-                startIndex = currentPage * gifLimitPerPage;
-                endIndex = startIndex + gifLimitPerPage;
+                variables.currentPage = variables.currentPage + 1;
+                startIndex = variables.currentPage * variables.gifLimitPerPage;
+                endIndex = startIndex + variables.gifLimitPerPage;
 
             } else {
-                currentPage = currentPage - 1;
-                startIndex = currentPage * gifLimitPerPage;
-                endIndex = startIndex + gifLimitPerPage;
+                variables.currentPage = variables.currentPage - 1;
+                startIndex = variables.currentPage * variables.gifLimitPerPage;
+                endIndex = startIndex + variables.gifLimitPerPage;
             }
             if(startIndex > -1 && endIndex > -1) {
-                updateResults(currentFilterTotalResults, startIndex, endIndex);
-                checkIfLastPage(startIndex, endIndex);
+                updateResults(variables.currentFilterTotalResults, startIndex, endIndex);
+                navigationHandler.prototype.checkIfLastPage(startIndex, endIndex);
             }
         };
 
@@ -228,7 +244,8 @@ var SwrveApp = function () {
     var API = {
         navigationHandler: navigationHandler,
         apiDataHandler: apiDataHandler,
-        additionalDetailsHandler: additionalDetailsHandler
+        additionalDetailsHandler: additionalDetailsHandler,
+        variables: variables
     };
     return API;
 
